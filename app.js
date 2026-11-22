@@ -2043,7 +2043,7 @@ const CONTACT = PROFILE;
       text: 'Estou aberto a vagas, freelas e colaborações. Me chama por e-mail ou no LinkedIn que eu respondo rápido.',
     },
     footer: {
-      text: 'Feito à mão com HTML, CSS e JavaScript.',
+      text: '',
     },
   };
 
