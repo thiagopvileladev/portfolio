@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Painel · Portfólio</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233b82f6'/%3E%3Cstop offset='1' stop-color='%236366f1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Cpath d='M10 11l5 5-5 5M17 21h6' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+
+  <!-- Aplica o tema salvo antes da primeira pintura (evita "piscar") -->
+  <script>
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem("saas-services:theme"); } catch (e) {}
+      if (t !== "light" && t !== "dark") t = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", t);
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body data-page="admin">
+  <noscript>
+    <div class="noscript">Este painel precisa do JavaScript habilitado para funcionar.</div>
+  </noscript>
+
+  <!-- ================================================================
+       TELA DE LOGIN
+       ================================================================ -->
+  <main class="login" id="login" hidden>
+    <div class="hero__bg" aria-hidden="true">
+      <div class="hero__grid"></div>
+      <div class="hero__glow"></div>
+    </div>
+
+    <div class="login__card">
+      <div class="login__head">
+        <span class="login__lock"><span data-icon="lock" class="i--lg"></span></span>
+        <h1 class="login__title">Painel administrativo</h1>
+        <p class="login__subtitle">Entre para gerenciar os projetos do portfólio.</p>
+      </div>
+
+      <form class="login__form" id="login-form" novalidate>
+        <div class="field">
+          <label class="label" for="login-user">Usuário</label>
+          <div class="input-group">
+            <span data-icon="user" class="input-group__icon"></span>
+            <input class="input" id="login-user" name="username" type="text" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="Seu usuário" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="login-pass">Senha</label>
+          <div class="input-group input-group--action">
+            <span data-icon="lock" class="input-group__icon"></span>
+            <input class="input" id="login-pass" name="password" type="password" autocomplete="current-password" placeholder="Sua senha" required>
+            <button type="button" class="icon-btn icon-btn--sm input-group__action" data-toggle-password aria-label="Mostrar senha" aria-pressed="false">
+              <span data-icon="eye"></span>
+            </button>
+          </div>
+        </div>
+
+        <p class="alert alert--error" id="login-error" role="alert" hidden></p>
+
+        <button type="submit" class="btn btn--primary btn--lg btn--block">
+          Entrar no painel
+          <span data-icon="arrow-right" class="i--shift"></span>
+        </button>
+      </form>
+
+      <p class="login__foot">
+        <a href="index.html" class="link-muted"><span data-icon="arrow-left" class="i--sm"></span>Voltar para o portfólio</a>
+      </p>
+    </div>
+  </main>
+
+  <!-- ================================================================
+       DASHBOARD
+       ================================================================ -->
+  <div id="dashboard" hidden>
+    <header class="dash-header">
+      <div class="container dash-header__inner">
+        <a href="index.html" class="brand" aria-label="Abrir portfólio">
+          <span class="brand__mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="m7 8 4 4-4 4"/><path d="M13 16h4"/></svg>
+          </span>
+          <span class="brand__name">Portfólio</span>
+        </a>
+        <span class="pill pill--accent">admin</span>
+
+        <div class="dash-header__actions">
+          <button type="button" class="icon-btn icon-btn--sm theme-toggle" data-theme-toggle aria-label="Alternar tema claro ou escuro" title="Alternar tema">
+          <span data-icon="sun" class="i--sun"></span><span data-icon="moon" class="i--moon"></span>
+        </button>
+        <a href="index.html" class="btn btn--ghost btn--sm" target="_blank" rel="noopener" title="Abrir vitrine em nova aba">
+            <span data-icon="globe"></span><span class="hide-sm">Ver site</span>
+          </a>
+          <button type="button" class="btn btn--ghost btn--sm" id="logout-btn" title="Encerrar sessão">
+            <span data-icon="log-out"></span><span class="hide-sm">Sair</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container dash-main">
+      <!-- Cabeçalho + backup -->
+      <section class="dash-top">
+        <div>
+          <p class="kicker">Painel</p>
+          <h1 class="dash-title">Seu portfólio</h1>
+          <p class="dash-desc">Gerencie os projetos e todos os textos do seu portfólio. Os dados ficam salvos neste navegador; o backup em JSON leva projetos e conteúdo juntos.</p>
+        </div>
+        <div class="dash-tools" role="group" aria-label="Backup e ações">
+          <button type="button" class="btn btn--secondary btn--sm" id="export-btn">
+            <span data-icon="download"></span>Exportar JSON
+          </button>
+          <button type="button" class="btn btn--secondary btn--sm" id="import-btn">
+            <span data-icon="upload"></span>Importar JSON
+          </button>
+          <input type="file" id="import-input" accept="application/json,.json" hidden>
+          <button type="button" class="btn btn--primary btn--sm" id="new-btn">
+            <span data-icon="plus"></span>Novo projeto
+          </button>
+        </div>
+      </section>
+
+      <!-- Resumo -->
+      <section class="stats" aria-label="Resumo">
+        <div class="stat">
+          <p class="stat__label"><span data-icon="folder" class="i--sm"></span>Projetos</p>
+          <p class="stat__value" id="stat-total">0</p>
+        </div>
+        <div class="stat">
+          <p class="stat__label"><span data-icon="activity" class="i--sm"></span>Em produção</p>
+          <p class="stat__value" id="stat-production">0</p>
+        </div>
+        <div class="stat stat--wide">
+          <p class="stat__label">
+            <span data-icon="database" class="i--sm"></span>Armazenamento local
+            <span class="stat__hint" id="stat-storage-hint"></span>
+          </p>
+          <p class="stat__value" id="stat-storage">0 B</p>
+          <div class="meter" id="storage-meter" role="progressbar" aria-label="Uso aproximado do armazenamento local" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="meter__bar" id="storage-bar"></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="view-switch" role="group" aria-label="Seção do painel">
+        <button type="button" data-view="projects" aria-pressed="true"><span data-icon="folder" class="i--sm"></span>Projetos</button>
+        <button type="button" data-view="site" aria-pressed="false"><span data-icon="globe" class="i--sm"></span>Conteúdo do site</button>
+      </div>
+
+      <div class="dash-grid" data-view-panel="projects">
+        <!-- ===== Formulário de cadastro / edição ===== -->
+        <section class="panel" id="form-panel" aria-labelledby="form-title">
+          <form id="project-form" novalidate>
+            <div class="panel__head">
+              <h2 class="panel__title" id="form-title">Novo projeto</h2>
+              <span class="pill" id="form-badge">cadastro</span>
+            </div>
+
+            <div class="panel__body">
+              <div class="field">
+                <label class="label" for="f-name"><span>Nome do projeto <span class="req" aria-hidden="true">*</span></span></label>
+                <input class="input" id="f-name" name="name" type="text" maxlength="120" placeholder="Ex.: Agendo" required aria-describedby="error-name">
+                <p class="field__error" id="error-name" data-error-for="name" hidden></p>
+              </div>
+
+              <div class="field-row">
+                <div class="field">
+                  <label class="label" for="f-category">Categoria</label>
+                  <select class="select" id="f-category" name="category"></select>
+                </div>
+                <div class="field">
+                  <label class="label" for="f-status">Status</label>
+                  <select class="select" id="f-status" name="status"></select>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label" for="f-short">Descrição curta <span class="counter" id="short-counter">0/180</span></label>
+                <textarea class="textarea" id="f-short" name="shortDescription" rows="2" maxlength="180" placeholder="Resumo de 1 a 2 frases exibido no card da vitrine."></textarea>
+              </div>
+
+              <div class="field">
+                <label class="label" for="f-full">Descrição completa <span class="hint">exibida no modal</span></label>
+                <textarea class="textarea" id="f-full" name="fullDescription" rows="5" placeholder="Contexto, problema resolvido e resultados. Deixe uma linha em branco para separar parágrafos."></textarea>
+              </div>
+
+              <div class="field">
+                <label class="label" for="f-features">Funcionalidades / diferenciais <span class="hint">uma por linha</span></label>
+                <textarea class="textarea" id="f-features" name="features" rows="4" placeholder="Login com Google&#10;Pagamentos via Pix&#10;Relatórios em tempo real"></textarea>
+              </div>
+
+              <!-- Imagem: URL ou upload local (convertido para Base64 otimizado) -->
+              <div class="field">
+                <div class="label-row">
+                  <span id="image-label">Imagem de capa</span>
+                  <div class="segmented" role="group" aria-label="Origem da imagem">
+                    <button type="button" data-image-mode="url" aria-pressed="true"><span data-icon="link" class="i--xs"></span>URL</button>
+                    <button type="button" data-image-mode="upload" aria-pressed="false"><span data-icon="upload" class="i--xs"></span>Upload</button>
+                  </div>
+                </div>
+
+                <div data-image-panel="url">
+                  <input class="input" id="f-image-url" name="imageUrl" type="text" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://exemplo.com/capa.jpg" aria-labelledby="image-label" aria-describedby="error-image">
+                </div>
+
+                <div data-image-panel="upload" hidden>
+                  <label class="dropzone" id="dropzone">
+                    <input type="file" id="f-image-file" accept="image/*" aria-label="Enviar imagem de capa">
+                    <span class="dropzone__icon"><span data-icon="image" id="dropzone-icon"></span></span>
+                    <span class="dropzone__text" id="dropzone-text"><strong>Clique para enviar</strong> ou arraste uma imagem</span>
+                    <span class="hint">JPG, PNG ou WebP · redimensionada e comprimida automaticamente</span>
+                  </label>
+                </div>
+
+                <div class="preview" id="image-preview"></div>
+                <p class="field__error" id="error-image" data-error-for="image" hidden></p>
+                <p class="hint">Proporção recomendada 16:9. Sem imagem, a vitrine gera uma capa automática pela categoria.</p>
+              </div>
+
+              <div class="field">
+                <label class="label" for="f-link">Link do projeto <span class="hint">opcional</span></label>
+                <div class="input-group">
+                  <span data-icon="link" class="input-group__icon"></span>
+                  <input class="input" id="f-link" name="link" type="text" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://meuprojeto.com.br" aria-describedby="error-link">
+                </div>
+                <p class="field__error" id="error-link" data-error-for="link" hidden></p>
+              </div>
+
+              <div class="field">
+                <label class="label" for="f-repo">Repositório <span class="hint">GitHub, GitLab… opcional</span></label>
+                <div class="input-group">
+                  <span data-icon="github" class="input-group__icon"></span>
+                  <input class="input" id="f-repo" name="repo" type="text" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://github.com/voce/projeto" aria-describedby="error-repo">
+                </div>
+                <p class="field__error" id="error-repo" data-error-for="repo" hidden></p>
+              </div>
+
+              <div class="field">
+                <label class="label" for="f-tags">Tags / tecnologias <span class="hint">separadas por vírgula</span></label>
+                <div class="input-group">
+                  <span data-icon="tag" class="input-group__icon"></span>
+                  <input class="input" id="f-tags" name="tags" type="text" autocomplete="off" placeholder="React, Node.js, PostgreSQL">
+                </div>
+                <ul class="tags tags--preview" id="tags-preview" aria-label="Pré-visualização das tags"></ul>
+              </div>
+            </div>
+
+            <div class="panel__foot">
+              <button type="button" class="btn btn--ghost" id="cancel-btn" hidden>Cancelar edição</button>
+              <button type="submit" class="btn btn--primary" id="submit-btn"></button>
+            </div>
+          </form>
+        </section>
+
+        <!-- ===== Lista de projetos ===== -->
+        <section class="panel" aria-labelledby="list-title">
+          <div class="panel__head">
+            <h2 class="panel__title" id="list-title">
+              Projetos cadastrados <span class="count-pill" id="list-count">0</span>
+            </h2>
+            <span class="hint hide-sm">A ordem aqui é a ordem da vitrine</span>
+          </div>
+          <ul class="list" id="project-list"></ul>
+        </section>
+      </div>
+
+      <!-- ===== Conteúdo do site: todos os textos e links da vitrine ===== -->
+      <section class="panel site-panel" data-view-panel="site" aria-labelledby="site-title" hidden>
+        <form id="site-form" novalidate>
+          <div class="panel__head">
+            <h2 class="panel__title" id="site-title">Conteúdo do site</h2>
+            <span class="hint hide-sm">Tudo o que aparece na vitrine, exceto os projetos</span>
+          </div>
+          <div class="panel__body" id="site-fields"></div>
+          <div class="panel__foot">
+            <span class="site-status" id="site-status" role="status">Tudo salvo</span>
+            <button type="button" class="btn btn--ghost" id="site-reset">Restaurar padrão</button>
+            <button type="submit" class="btn btn--primary"><span data-icon="check"></span>Salvar conteúdo</button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
